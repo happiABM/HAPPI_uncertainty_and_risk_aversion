@@ -1,8 +1,6 @@
-#HAPPI code Version_July 2021, author: Jinxi
 #the main module
 
 import os 
-# import itertools
 import time
 import numpy as np
 import random
@@ -19,7 +17,6 @@ tech_lst = PowerPlant.__subclasses__()
 from cls_Power_Company import Power_Company
     
 ###=======================###
-
 
 financial_module = 'off'
 cheapest_plant = min(tech_lst, key=lambda i: i.overnight_cost)
@@ -40,24 +37,19 @@ possible_range = [mean-3*delta,mean-2*delta,mean-1*delta,mean, mean+1*delta, mea
 #possible_range = [1.5]
 
 ##==============########=======================##
-#print(possible_range)
-print(case_lst)
 case =  case_lst[0]
 evaluate_method = case[0][0]
 risk_adjust_method = case[0][1]
-print(risk_adjust_method)
+
 for company in Power_Company.lst:
     company.risk_averse_level = case[1]
-#print(company.risk_averse_level)
-
 
 ##==============start the simulation===============###
 for year in range (0,100):
 #for year in range (0,imilation_period):
-    print('\n','year: ', year)
+   
     carbon_price = real_carbon_price_profile [year]
-    # coal_cost = coal.cost
-    # natural_gas_cost = natural_gas.cost
+
 
     # 2) The power companies produce electricity.
     tech_order,cost_order = Power_Company.bid_el_price(carbon_price,coal_cost,natural_gas_cost)
@@ -77,7 +69,7 @@ for year in range (0,100):
     PowerPlant.get_revenue_per_plant(annual_tech_revuene,tech_order,Real_lifeMode ='True')
     for company in Power_Company.lst: #each company updates cash on its bank account
             revenue = company.calculate_revenue()#calculate revenue.
-            #print('revenue: ',round(revenue/10**6,2))
+           
             company.update_cash(revenue)
             company.pay_back_debt(year)
             company.record_financial_variable(revenue,year) #record net income,debt,cash,equity.
@@ -128,15 +120,7 @@ for year in range (0,100):
                             count_NO += 1
                             continue#then skip the eveluation process
                     
-                    #                                     ) for tech in tech_lst]#estimate profits for different scenarios.
-                    # company.evaluate_portfolio_profits (year
-                    #                                     ,tech_lst
-                    #                                     ,possible_carbon_price
-                    #                                     ,electricity_demand
-                    #                                     ,risk_adjust_method = 'mean-deviation' #'mean-deviation','loss-aversion',
-                    #                                     ,financial_module = 'off'
-                    #                                     )
-                    # invesment_decision = company.evaluate_options(tech_lst,year,financial_module ='off')
+                   
                     if evaluate_method == 'individual_assessment':
 
                         invesment_decision = company.estimate_single_profits (year
@@ -191,195 +175,15 @@ for year in range (0,100):
         #PowerPlant.technology_learning(year)
 
     for company in Power_Company.lst:
-        company.record_portfolio(tech_lst) #each company records own capacity,for later plotting
-        # if year > 3:
-        #     company.update_risk_averse_level(real_carbon_price_profile[:year]) #each agent adaptes its risk_averse_level
-        #else:
-        #company.risk_level_lst.append(company.risk_averse_level)
-        #     # if company.name == 'A6':
-        #     #     print(company.equity)
-        #     #     print(company.risk_averse_level)
+        company.record_portfolio(tech_lst) #each company records own capacity,for later plotting.
 
     continue # year +=1 #go to next year
 
 ####================#######end######==================######
-# print("END of the simulation")
 
 
 for pp in tech_lst:
     print(int(pp.quantity)) #print out the final capacity mix.
     #print(pp.average_pofitability_lst)
-
-#=============export and save final results===============#
-# Answer = input('Do you want to continue with saving data to CSV? Type yes or no: ')
-# if Answer == ('yes') or Answer == ('y'):
-#     print ('saving the data')
-savepath = 'C:/Users/jinxi/Box/ABM_model/PaperIV_carbon_price_uncertianty/model_output/'
-
-# caseName = evaluate_method+'_'+ risk_adjust_method +'='+str(company.risk_averse_level)+'_10agent/'
-
-
-
-
-
-
-if not os.path.exists(savepath+str(caseName)):
-    os.mkdir(savepath+caseName)
-
-##====save system capacity====#####
-save_varaible = 'system_installed_capacity'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    for tech in tech_lst:
-        writer.writerow([tech.__name__[0:-5]]+tech.capacity_record)
-
-save_varaible = 'electricity_production'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    for tech in tech_lst:
-        writer.writerow([tech.__name__[0:-5]]+tech.produce_quantity)
-
-save_varaible = 'production_price'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    for tech in tech_lst:
-        writer.writerow([tech.__name__[0:-5]]+tech.price_produce)
-
-
-save_varaible = 'overnight_cost'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    for tech in tech_lst:
-        writer.writerow([tech.__name__[0:-5]]+tech.cost_record)
-save_varaible ='electricity_price'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    writer.writerow(Happi.electricity_price)
-
-save_varaible ='CO2_emission'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    writer.writerow(Happi.CO2_emission)    
-
-save_varaible = 'annual_investment'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    for tech in tech_lst:
-        writer.writerow([tech.__name__[0:-5]]+tech.annual_investment)
-
-save_varaible = 'annual_revenue_records'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    for tech in tech_lst:
-        writer.writerow([tech.__name__[0:-5]]+tech.annual_revenue_records)
-
-save_varaible = 'estimated_NPV'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    for tech in tech_lst:
-        writer.writerow([tech.__name__[0:-5]]+ tech.estimated_NPV_records)
-
-save_varaible = 'average_pofitability'
-with open(savepath+caseName+save_varaible+'.csv','w', newline='') as f:
-    writer = csv.writer(f)
-    for tech in tech_lst:
-        writer.writerow([tech.__name__[0:-5]]+ [dict(tech.average_pofitability_lst)])
-
-##========every assessment of investment that were materialized.====##
-save_varaible = 'investment_assessment'
-if risk_adjust_method == 'mean-variance' or risk_adjust_method == 'mean-deviation':
-    col=['year'
-        ,'plant_type'
-        ,'selection_criteria'
-        ,'ep_no_invest'
-        ,'dev_no_invest'
-        ,'ep_self_invest'
-        ,'dev_self_invest'
-        ]
-elif risk_adjust_method == 'loss-aversion':
-    col=['year'
-        ,'plant_type'
-        ,'selection_criteria'
-        ,'ep_no_invest'
-        ,'ep_self_invest'
-        ,'positive_caseNames'
-        ,
-        ]
-
-df = pd.DataFrame(Power_Company.investment_assessment_lst, columns=col)
-df.to_csv(savepath+caseName+save_varaible+'.csv')  
-
-##===save data for every assessment under criteria 2.=====##
-save_varaible = 'assessment_recods'
-if risk_adjust_method == 'mean-variance' or risk_adjust_method == 'mean-deviation':
-    col=['year'
-        ,'company name'
-        ,'plant_type'
-        ,'selection_criteria'
-        ,'ep_no_invest'
-        ,'ep_self_invest'
-        ,'sum_ep_no_invest'
-        ,'sum_ep_self_invest'
-        ,'var_no_invest'
-        ,'var_self_invest'
-        ,'portfolio_pofitability'
-        ,'weighted_el_price'
-        ]
-
-elif risk_adjust_method == 'loss-aversion':
-    col=['year'
-        ,'company name'
-        ,'plant_type'
-        ,'selection_criteria'
-        ,'ep_no_invest'
-        ,'ep_self_invest'
-        ,'difference'
-        ,'sum_ep_self_invest'
-        ,'positive_cases'
-        ,'portfolio_pofitability'
-        ,'weighted_el_price'
-        ]
-
-#print(col)
-df = pd.DataFrame(Power_Company.assessment_recods, columns=col)
-df.to_csv(savepath+caseName+save_varaible+'.csv')  
-
-
-##====save Power_Company's data====#####
-# for company in Power_Company.lst:
-#     with open(savepath+caseName+'company_capacity/'+company.name+'.csv','w', newline='') as f:
-#             writer = csv.writer(f)
-#             for tech in tech_lst:
-#                 writer.writerow([tech.__name__[0:-5]]+company.portfolio_lst[tech])
-
-#     if financial_module == 'on':
-#         with open(savepath+caseName+'debt/'+company.name+'.csv','w', newline='') as f:
-#             writer = csv.writer(f)
-#             writer.writerow(company.debt_lst)
-
-#         with open(savepath+caseName+'cash/'+company.name+'.csv','w', newline='') as f:
-#             writer = csv.writer(f)
-#             writer.writerow(company.cash_lst)
-
-#         with open(savepath+caseName+'ROE/net_income_'+company.name+'.csv','w', newline='') as f:
-#             writer = csv.writer(f)
-#             writer.writerow(company.net_income_lst)
-
-#         with open(savepath+caseName+'ROE/equity_'+company.name+'.csv','w', newline='') as f:
-#             writer = csv.writer(f)
-#             writer.writerow(company.equity_lst)
-
-# ##=========company's risk levels===========##
-# with open(savepath+caseName+'risk_aversion_level.csv','w', newline='') as f:
-#         writer = csv.writer(f)
-#         for company in Power_Company.lst:
-#             writer.writerow([company.name]+company.risk_level_lst)
-
-
-
-print("END of saving data")
-    #gc.collect()
-    #     #=============END of the data saving process===============#
-    # if Answer == ('no'or 'n'):
-    #     print('Data is not saved')
-    #     print('End of the simulation')
+    
+# print("END of the simulation")
