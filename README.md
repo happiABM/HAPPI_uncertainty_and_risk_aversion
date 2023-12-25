@@ -10,7 +10,7 @@ The Happi is a computamodel tool for analyzing and understanding the dynamics of
 **Model Update**
 
 The main update in this version of Happi is the incorporation of uncertainties in CO2 price and risk averse behavior of investors.These new features enhance the model's ability to realistically simulate the decision-making processes in a fluctuating market environment.
-[A detailed description of each Python file and their functionalities will be coming soon to this site.]
+[A detailed description of each Python file and their functionalities will be coming soon to this site. In the meantime, if you have any questions or need further information, please feel free to reach out to the author at jinxi@chalmers.se]
 
 
 
