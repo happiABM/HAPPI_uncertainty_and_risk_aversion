@@ -1,4 +1,4 @@
-# Happi _ Uncertainty_and_risk_aversion
+# Happi-Uncertainty And Risk Aversion
 Welcome to the repository for the updated version of the Happi model. The Happi model is an agent-based model specifically designed to explore the low-carbon transition of the power system, developed using Python and Mathmatica.
 
 
